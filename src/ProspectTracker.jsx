@@ -642,55 +642,10 @@ export default function ProspectTracker() {
   const copiedTimerRef = useRef(null);
   const initializingRef = useRef(true);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const data = params.get("data");
-    if (data) {
-      try {
-        const parsed = safeB64Decode(data);
-        if (parsed.players) setPlayers(parsed.players);
-        if (parsed.posFilter) setPosFilter(parsed.posFilter);
-        if (parsed.archFilter) setArchFilter(parsed.archFilter);
-        if (parsed.starFilter) setStarFilter(parsed.starFilter);
-        if (typeof parsed.mediaOnly === "boolean") setMediaOnly(parsed.mediaOnly);
-        if (typeof parsed.watchOnly === "boolean") setWatchOnly(parsed.watchOnly);
-        if (parsed.search) setSearch(parsed.search);
-        if (parsed.sortBy) setSortBy(parsed.sortBy);
-        if (typeof parsed.groupByPos === "boolean") setGroupByPos(parsed.groupByPos);
-      } catch (e) {
-        console.warn("Unable to parse shared data:", e);
-      }
-    }
-    initializingRef.current = false;
-    return () => {
-      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
-    };
-  useEffect(() => {
-    if (initializingRef.current) return;
-    try {
-      const payload = {
-        players,
-        posFilter,
-        archFilter,
-        starFilter,
-        mediaOnly,
-        watchOnly,
-        search,
-        sortBy,
-        groupByPos,
-      };
-      const encoded = safeB64Encode(payload);
-      const params = new URLSearchParams(window.location.search);
-      params.set("data", encoded);
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState({}, "", newUrl);
-    } catch (e) {
-      console.warn("Failed to sync URL:", e);
-    }
-  }, [players, posFilter, archFilter, starFilter, mediaOnly, watchOnly, search, sortBy, groupByPos]);
+  useEffect(() => { const params = new URLSearchParams(window.location.search); const data = params.get("data"); if (data) { try { const parsed = safeB64Decode(data); if (parsed.players) setPlayers(parsed.players); if (parsed.posFilter) setPosFilter(parsed.posFilter); if (parsed.archFilter) setArchFilter(parsed.archFilter); if (parsed.starFilter) setStarFilter(parsed.starFilter); if (typeof parsed.mediaOnly === "boolean") setMediaOnly(parsed.mediaOnly); if (typeof parsed.watchOnly === "boolean") setWatchOnly(parsed.watchOnly); if (parsed.search) setSearch(parsed.search); if (parsed.sortBy) setSortBy(parsed.sortBy); if (typeof parsed.groupByPos === "boolean") setGroupByPos(parsed.groupByPos); } catch (e) { console.warn("Unable to parse shared data:", e); } } initializingRef.current = false; return () => { if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current); }; }, []);
 
-  const toggleWatch = (id) =>
-    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, watch: !p.watch } : p)));
+useEffect(() => { if (initializingRef.current) return; try { const payload = { players, posFilter, archFilter, starFilter, mediaOnly, watchOnly, search, sortBy, groupByPos, }; const encoded = safeB64Encode(payload); const params = new URLSearchParams(window.location.search); params.set("data", encoded); const newUrl = ${window.location.pathname}?${params.toString()}; window.history.replaceState({}, "", newUrl); } catch (e) { console.warn("Failed to sync URL:", e); } }, [players, posFilter, archFilter, starFilter, mediaOnly, watchOnly, search, sortBy, groupByPos]);
+
 
   const cycleTier = (id) =>
     setPlayers((prev) =>
