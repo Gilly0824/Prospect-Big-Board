@@ -665,9 +665,6 @@ export default function ProspectTracker() {
     return () => {
       if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (initializingRef.current) return;
     try {
